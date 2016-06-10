@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- '0.12'
+- '0.11'
+- '0.10'
+
+script:
+- npm test
+
+env:
+  global:
+  - NODE_VERSION_TO_DEPLOY: '0.12'
+  - GH_REF: github.com/KamataRyo/wakachi.git
+  - secure: NrPu1Wd55V7/aBDXI6TIsIhFT72WzPomQ8XR+id2V7zJm8A+PPcAY/kZ/JHJ7FghL+wDggKGKyDF/Aj1rSU6aw31EkA/OuLBQTK9oyWwHwOaGh4BAty2LF3GPCZ601Tl5DUiDxxCX+NYA0sxKzzNRJUmEvqkzbroRRLJq0ZNh8j/zy6Alv7HMyxGph4qH97gURj1F3/pJ1A5SuQxpxSb0i84OocV9yVDrTcvrXFvpOf7dxh3IzZV26fwxp9Nodkoj1I5Tu6SljsfTf/3T87pDWLJLu9wcI4bfoXsuWZcjl3EISCPHJ0PLG0L/UlmCcsbpUwgXH0iFIE02w1PhcSZGJYUtIAgzPEpPo6gyyFYSi+l7Gmm7iuCV40HHB+IY/Ra/uMq68GN1qFUdImCFzbzVk5V0HjfehzkSByByOGaSUx+MK0nTRxEHwR+tUt2o1SOrKjN69UqhcAlducL9TFy48DZXLoxnPXNU2bPaYxsNPt3R8hqw7kYTV0O0gWQb/mS6LHM2ClFJwOKccfn6HvAUcg5jQYp0tsrlxXmgdYPAoJS80Xo1qY70Scp5JHyVcjjQWq/EZblCOQQ/OnYRTC592v7pIZyqApquzOUr6FA27WUE94s3MbutBTOdQ9QK4J0R/xbUHgWwc+oWe2uA2LuKRjrjnwp9TW6ioxZnVe9h0k=
+
+after_success:
+- curl https://raw.githubusercontent.com/KamataRyo/travis-sctipts-collection/master/npm/deploy_npm.sh | bash
+
+deploy:
+  provider: npm
+  email: mugil.cephalus+npmjs.com@gmail.com
+  api_key:
+    secure: gnyDV5ceyTV2+XpyBG/nHP0vlWT9E/4MtvHDybthBxbO4QLBbe8PyHsgjC/qCBiy3ZJQrgvj2XRkFvQNMk35Nc+saZSvFwnQ3vl3Nu9EqaqYNUdJzCH8od1UFNqA7kAghFn/LfQHjMZfDPAudUicJb9py+WvXnUebZ1NaXhHN0jYW3xmti2jEiCYUVT5o/9MZ88/oM9PKNn9DdQnwYv0peb8J4DpL0pr5TVZtUlx+jb/nt5Wix/G3uuAAJ+mGRK5eOoH9JiAHcWIdZpaMxu74BZcaVTrnTAF7DYqrAq86LI38UoEYW5dkTZGGP/RWzrhfFuXkv12p4ue7eF79lJ0+iOcNybhO3tDYCpAM+RWn/tMmnZTqkhNzIMyH08oN5p5EZM72Ue58DRYsF4xMCFx2141wpPtK7K2sV7T61bOhqiI97W3AjlD4K/KSXeliN8sRV8HqZqKPEl0ejh6Le/gsEHr3rPF9WVgwYk1om8NM+y+DUOXOp0WrfBLO9PZbuYhTIqdCMoQupOGzpUGD/o1fgr/1duFiZCeL5+nShnHz89MIorJUdwR8p211o2Ceon9Yb4reuxhrbiJhiQ4d5WC0/jQS+GgUny017MXWBkIUn7lukYLgAveWPnWvL5LF36hJ/vNyBJMML3VhKESJbIwVqxzy7W9IaSTOUrtcT3dZXc=
+  on:
+    tags: true
+    repo: KamataRyo/wakachi
