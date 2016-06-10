@@ -1,12 +1,13 @@
 {
   "name": "wakachi",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "日本語文の改行位置を調整するjQueryプラグイン",
   "main": "Wakachi.js",
   "dependencies": {
     "jquery": "^3.0.0"
   },
   "devDependencies": {
+    "coffee-script": "^1.10.0",
     "gulp": "^3.9.1",
     "gulp-coffee": "^2.3.2",
     "gulp-notify": "^2.2.0",
@@ -17,9 +18,9 @@
     "should": "^9.0.1"
   },
   "scripts": {
-      "build": "./node_modules/.bin/gulp build",
-      "install": "npm run build",
-      "test": "./node_modules/.bin/mocha ./tests"
+    "build": "./node_modules/.bin/gulp build",
+    "install": "npm run build",
+    "test": "./node_modules/.bin/mocha ./tests"
   },
   "repository": {
     "type": "git",
