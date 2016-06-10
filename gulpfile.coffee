@@ -13,5 +13,7 @@ gulp.task 'coffee', ->
         # .pipe uglify()
         .pipe gulp.dest './'
 
-gulp.task 'watch', ['coffee'], ->
-    gulp.watch ['./**/*.coffee', '!gulpfile.coffee'], ['coffee']
+gulp.task 'build', ['coffee']
+
+gulp.task 'watch', ['build'], ->
+    gulp.watch ['./**/*.coffee', '!gulpfile.coffee'], ['build']
