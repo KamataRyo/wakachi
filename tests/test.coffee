@@ -6,6 +6,7 @@ describe 'test of `Wakachi`.', ->
         (typeof Wakachi).should.be.exactly 'function'
         (typeof new Wakachi {}).should.be.exactly 'object'
 
-    it 'should save the arguments when construction.', ->
-        wakachi = new Wakachi {}
-        (typeof wakachi.selector).should.be.exactly 'string'
+    for method in ['bind', 'unbind']
+        it "should have method t`#{method}`.", ->
+            wakachi = new Wakachi {}
+            (typeof wakachi[method]).should.be.exactly 'function'

@@ -11,6 +11,7 @@ gulp.task 'coffee', ->
         .pipe sourcemaps.init()
         .pipe coffee()
         # .pipe uglify()
+        .pipe sourcemaps.write()
         .pipe gulp.dest './'
 
 gulp.task 'build', ['coffee']

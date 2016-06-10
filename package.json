@@ -4,7 +4,7 @@
   "description": "日本語文の改行位置を調整するjQueryプラグイン",
   "main": "Wakachi.js",
   "dependencies": {
-    "jquery": "^3.0.0"
+    "jquery": "1.12.4"
   },
   "devDependencies": {
     "coffee-script": "^1.10.0",
