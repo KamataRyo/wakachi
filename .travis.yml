@@ -14,7 +14,8 @@ env:
   - secure: NrPu1Wd55V7/aBDXI6TIsIhFT72WzPomQ8XR+id2V7zJm8A+PPcAY/kZ/JHJ7FghL+wDggKGKyDF/Aj1rSU6aw31EkA/OuLBQTK9oyWwHwOaGh4BAty2LF3GPCZ601Tl5DUiDxxCX+NYA0sxKzzNRJUmEvqkzbroRRLJq0ZNh8j/zy6Alv7HMyxGph4qH97gURj1F3/pJ1A5SuQxpxSb0i84OocV9yVDrTcvrXFvpOf7dxh3IzZV26fwxp9Nodkoj1I5Tu6SljsfTf/3T87pDWLJLu9wcI4bfoXsuWZcjl3EISCPHJ0PLG0L/UlmCcsbpUwgXH0iFIE02w1PhcSZGJYUtIAgzPEpPo6gyyFYSi+l7Gmm7iuCV40HHB+IY/Ra/uMq68GN1qFUdImCFzbzVk5V0HjfehzkSByByOGaSUx+MK0nTRxEHwR+tUt2o1SOrKjN69UqhcAlducL9TFy48DZXLoxnPXNU2bPaYxsNPt3R8hqw7kYTV0O0gWQb/mS6LHM2ClFJwOKccfn6HvAUcg5jQYp0tsrlxXmgdYPAoJS80Xo1qY70Scp5JHyVcjjQWq/EZblCOQQ/OnYRTC592v7pIZyqApquzOUr6FA27WUE94s3MbutBTOdQ9QK4J0R/xbUHgWwc+oWe2uA2LuKRjrjnwp9TW6ioxZnVe9h0k=
 
 after_success:
-- curl https://raw.githubusercontent.com/KamataRyo/travis-sctipts-collection/master/npm/deploy_npm.sh | bash
+  - bash <(curl -s https://codecov.io/bash)
+  - curl https://raw.githubusercontent.com/KamataRyo/travis-sctipts-collection/master/npm/deploy_npm.sh | bash
 
 deploy:
   provider: npm
