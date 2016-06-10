@@ -2,7 +2,7 @@
 
 # try to import jQuery
 if ! jQuery? and require? and (typeof require is 'function')
-        jQuery = require 'jQuery'
+        jQuery = require 'jquery'
 
 # Main object
 class Wakachi
