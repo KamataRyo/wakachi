@@ -9,67 +9,119 @@ if !jQuery? and require? and (typeof require is 'function')
 # Main object
 class Wakachi
 
-    _segmenter     = null
-    _mainContainer = null
-    _selector      = null
-    _events        = null
+    _segmenter: null
+    _selector:  null
+    _events:    null
 
     constructor: (options) ->
         _segmenter = new TinySegmenter()
         # options default
         unless options then options = {}
         unless options.elements? then options.elements = ['[wakachi]','[data-wakachi]']
-        unless options.events?   then options.events   = ['load','resize']
+        unless options.events?   then options.events   = ['click']#'load','resize'
         _selector = options.elements.join ','
         _events   = options.events.join ' '
         return this
 
     # Fetch targeted elements on the page
-    _getTargetedElements = -> _mainContainer.find _selector
 
     # Refresh line feeding point when parent is resized.
     # コンテナがリサイズされたときに、改行点をリフレッシュします。
     wakachi = (event)->
-        text = _mainContainer.text()
-        _mainContainer.text ''
-        segs = _segmenter.segment text
-        prevHeight = -1
-        for seg in segs
-            r = Math.round(Math.random() * 256)
-            g = Math.round(Math.random() * 256)
-            b = Math.round(Math.random() * 256)
-            element = $ "<span style=\"color:rgb(#{r},#{g},#{b})\">#{seg}</span>"
-                .appendTo _mainContainer
-            if 0 < prevHeight and prevHeight < element.height()
-                element.before $ '<br>'
-            else
-                prevHeight = element.height()
+        $(this._selector).each ->
+            text = $(this).text()
+            $(this).text ''
+            segs = _segmenter.segment text
+            prevHeight = -1
+            walker = 0
 
+            for seg in segs
+                r = Math.round(Math.random() * 256)
+                g = Math.round(Math.random() * 256)
+                b = Math.round(Math.random() * 256)
+                element = $ "<span style=\"color:rgb(#{r},#{g},#{b})\">#{seg}</span>"
+                    .appendTo $(this)
+                if 0 < prevHeight and prevHeight < element.height()
+                    element.before $ '<br>'
+                else
+                    prevHeight = element.height()
 
     # Remove listener from the container
-    unbind: ->
+    unbind: (container)->
         # Detach event handler
-        if _mainContainer? then _mainContainer.off _events, _selector, wakachi
+        $(container).off this._events, this._selector, wakachi
         return this
 
     # Bind listener to the container
     bind: (container)->
-        unless container? then container = $ _selector
+        unless container? then container = $ this._selector
         # turn into  jquery object if needed
         unless (container instanceof $) then container = $ container
         # clean up at first
         if container? then this.unbind()
-        # Store container
-        _mainContainer = container
         # Attach event handler
-        _mainContainer.on _events, _selector, wakachi
+        $(this).on this._events, this._selector, wakachi
 
         wakachi()
         return this
 # ------------------------------------------------------------------- Wakachi --
 
+# Chunker ----------------------------------------------------------------------
+class Chunker
+    _postPositionals = [
+        # 格助詞
+        'が', 'の', 'を', 'に', 'へ', 'と', 'から', 'より', 'で', 'や'
+        # 並立助詞
+        'の', 'に', 'と', 'や', 'やら', 'か', 'なり', 'だの'
+        # 副助詞
+        'ばかり', 'まで', 'だけ', 'ほど', 'くらい', 'など', 'なり', 'やら'
+        # 係助詞
+        'は', 'も', 'こそ', 'でも', 'しか', 'さえ', 'だに'
+        # 接続助詞
+        'ば', 'と', 'ても', 'けれど', 'が', 'のに', 'ので', 'から', 'し', 'て', 'で', 'なり', 'ながら', 'たり', 'つつ'
+        # 終助詞
+        'か', 'な', 'とも', 'ぞ', 'や'
+        # 女性言葉
+        'わ', 'こと', 'てよ', 'ことよ', 'もの', 'かしら'
+        # 間投助詞
+        'さ', 'よ', 'ね', 'な', 'の'
+        # その他（助詞意外）
+        'する','し'
+        #
+        'です',''
+    ]
+    _words: null
+
+    constructor: (words)-> this._words = words
+    @isPostPositional: (word)-> word in _postPositionals
+    chunk: ->
+        chunk = ''
+        postPositionalContinues = false
+        result = []
+
+        for word in this._words
+            if postPositionalContinues
+                if Chunker.isPostPositional word
+                    chunk += word
+                else
+                    postPositionalContinues = false
+                    result.push chunk
+                    chunk = word
+            else
+                if Chunker.isPostPositional word
+                    chunk += word
+                    postPositionalContinues = true
+                else
+                    if chunk isnt ''
+                        result.push chunk
+                    chunk = word
+
+        if chunk isnt '' then result.push chunk
+
+        return result
 
 # TynySegmenter ----------------------------------------------------------------
+# bundled and redistributed by KamataRyo <mugil.cephalus+github.com@gmail.com>
 `
 // TinySegmenter 0.1 -- Super compact Japanese tokenizer in Javascript
 // (c) 2008 Taku Kudo <taku@chasen.org>
@@ -88,7 +140,7 @@ function TinySegmenter() {
   this.chartype_ = [];
   for (var i in patterns) {
     var regexp = new RegExp;
-    regexp.compile(i)
+    regexp = new RegExp(i); //regexp.compile(i); Modified deprecated 'complile'
     this.chartype_.push([regexp, patterns[i]]);
   }
 
@@ -253,7 +305,7 @@ TinySegmenter.prototype.segment = function(input) {
 # module export
 isCommonJS = (typeof module isnt 'undefined') and module.exports?
 if isCommonJS
-    module.exports = Wakachi
+    module.exports = {Wakachi, Chunker}
 # Export to window
 else if window?
     window.Wakachi = Wakachi
