@@ -1,6 +1,6 @@
 'use strict'
 
-# try to import jQuery
+# try to import dependency
 if !jQuery? and require? and (typeof require is 'function')
     jQuery = require 'jquery'
 
@@ -19,11 +19,10 @@ class Wakachi
         unless options then options = {}
         unless options.elements? then options.elements = ['[wakachi]','[data-wakachi]']
         unless options.events?   then options.events   = ['click']#'load','resize'
+        # normalize the fields for jQuery
         _selector = options.elements.join ','
         _events   = options.events.join ' '
-        return this
 
-    # Fetch targeted elements on the page
 
     # Refresh line feeding point when parent is resized.
     # コンテナがリサイズされたときに、改行点をリフレッシュします。
@@ -68,7 +67,7 @@ class Wakachi
 
 # Chunker ----------------------------------------------------------------------
 class Chunker
-    _postPositionals = [
+    @postPositionals: [
         # 格助詞
         'が', 'の', 'を', 'に', 'へ', 'と', 'から', 'より', 'で', 'や'
         # 並立助詞
@@ -88,12 +87,45 @@ class Chunker
         # その他（助詞意外）
         'する','し'
         #
-        'です',''
+        'です'
     ]
+
     _words: null
+    @_isArray: (obj)->
+        if Array.isArray?
+            Array.isArray obj
+        else
+            # fall back for browers which do not support ES6
+            Object.prototype.toString.call(obj) is '[object Array]'
 
     constructor: (words)-> this._words = words
-    @isPostPositional: (word)-> word in _postPositionals
+
+    @getPostPositionals: -> @postPositionals
+
+    @addPostPositionals: (additionals)->
+        if ! (typeof additionals is 'string') and ! (@_isArray additionals)
+            throw new Error 'Only strings or arrays are acceptable.'
+        else if (additionals is '') or (@_isArray additionals and additionals.length is 0)
+            throw new Error 'Empty string or array are not acceptable.'
+        @postPositionals.push additionals
+        # method chain
+        return Chunker
+
+    @removePostPositionals: (removals) ->
+        if ! (typeof removals is 'string') and ! (@_isArray removals)
+            throw new Error 'Only strings or arrays are acceptable.'
+        else if (removals is '') or (@_isArray removals and removals.length is 0)
+            throw new Error 'Empty string or array are not acceptable.'
+
+        for pp, i in @postPositionals
+            if pp is removals then delete @postPositionals[i]
+        # method chain
+        return Chunker
+
+    @isPostPositional: (word)->
+        console.log @postPositionals
+        word in @postPositionals
+
     chunk: ->
         chunk = ''
         postPositionalContinues = false
