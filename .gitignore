@@ -6,3 +6,4 @@ vendor/
 bower_components/
 
 *.js
+!TinySegmenter.js
