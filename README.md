@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/KamataRyo/wakachi.svg?branch=master)](https://travis-ci.org/KamataRyo/wakachi)
 
-日本語をいい感じに改行する jQuery プラグイン
+日本語をいい感じに改行する jQuery プラグイン。開発中です。
 
 # How to use
 
-1. load wakachi
+1. load wakachi script
 1. `<p data-wakachi>私はたわし</p>`
 
 # development
